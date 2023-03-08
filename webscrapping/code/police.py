@@ -87,9 +87,59 @@ WebDriverWait(driver, 5)\
                                       "rc-button goog-inline-block rc-button-audio".replace(" ", "."))))\
     .click()
 
+# Click on audio download button
+download_link = WebDriverWait(driver, 5)\
+    .until(EC.element_to_be_clickable((By.CLASS_NAME,
+                                      "rc-audiochallenge-tdownload-link".replace(" ", "."))))\
+# Retrieve audio and convert to .wav                                    
+ret = None
+tmp_dir = tempfile.gettempdir()
+mp3_file = os.path.join(tmp_dir, r"C:\Users\DANIEL\Desktop\ITSENSE\demo_captcha\webscrapping\tools\audio.mp3")
+wav_file = os.path.join(tmp_dir, r"C:\Users\DANIEL\Desktop\ITSENSE\demo_captcha\webscrapping\tools\audio.wav")
+tmp_files = [mp3_file, wav_file]
 
-time.sleep(200)
+with open(mp3_file, "wb") as f:
+    link = download_link.get_attribute("href")
+    print(link)
+    r = requests.get(link, allow_redirects=True)
+    f.write(r.content)
+    f.close()
+
+AudioSegment.from_mp3(mp3_file).export(wav_file, format="wav")
+
+# Speech to text functionality
+recognizer = sr.Recognizer()
+
+with sr.AudioFile(wav_file) as source:
+    recorded_audio = recognizer.listen(source)
+    text = recognizer.recognize_google(recorded_audio)
+
+# Input text in field
+WebDriverWait(driver, 5)\
+    .until(EC.element_to_be_clickable((By.ID,
+                                      "audio-response")))\
+    .send_keys(text)
+
+# Click the "Verify" button to complete
+WebDriverWait(driver, 5)\
+    .until(EC.element_to_be_clickable((By.ID,
+                                      "recaptcha-verify-button")))\
+    .click()
+
+# Go back to default content
+driver.switch_to.default_content()
+
+time.sleep(2)
+
+# Click on "Send button"
+WebDriverWait(driver, 5)\
+.until(EC.element_to_be_clickable((By.ID,
+                                    "j_idt17")))\
+.click()
+
+time.sleep(10)
 
 driver.quit()
+
 
 
