@@ -80,11 +80,12 @@ WebDriverWait(driver, 5)\
 # Go back to default content
 driver.switch_to.default_content()
 
-time.sleep(20)
+time.sleep(5)
 
 # Select challenge iframe and switch to it
-iframe = driver.find_element(By.TAG_NAME, "iframe") 
-if iframe.get_attribute("src").startswith("https://www.google.com/recaptcha/api2/bframe"):
+iframes = driver.find_elements(By.TAG_NAME, "iframe") 
+print([iframe.get_attribute("src") for iframe in iframes])
+if not iframes[-1].get_attribute("src").startswith("https://www.google.com/recaptcha/api2/anchor"):
     print("FOUND IFRAME - IMAGE CHALLENGE----------")
     challenge_iframe = driver.find_element(By.CSS_SELECTOR, "iframe[title='El reCAPTCHA caduca dentro de dos minutos']") 
     driver.switch_to.frame(challenge_iframe)
@@ -137,6 +138,7 @@ if iframe.get_attribute("src").startswith("https://www.google.com/recaptcha/api2
     # Go back to default content
     driver.switch_to.default_content()
     time.sleep(2)
+
 
 # Click on "Search" button
 WebDriverWait(driver, 5)\
