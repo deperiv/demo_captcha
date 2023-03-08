@@ -78,64 +78,73 @@ driver.switch_to.default_content()
 time.sleep(5)
 
 # Select challenge iframe and switch to it
-challenge_iframe = driver.find_element(By.CSS_SELECTOR, "iframe[title='El reCAPTCHA caduca dentro de dos minutos']") 
-driver.switch_to.frame(challenge_iframe)
+try:
+    challenge_iframe = driver.find_element(By.CSS_SELECTOR, "iframe[title='El reCAPTCHA caduca dentro de dos minutos']") 
+    driver.switch_to.frame(challenge_iframe)
 
-# Click on audio button
-WebDriverWait(driver, 5)\
-    .until(EC.element_to_be_clickable((By.CLASS_NAME,
-                                      "rc-button goog-inline-block rc-button-audio".replace(" ", "."))))\
-    .click()
+    # Click on audio button
+    WebDriverWait(driver, 5)\
+        .until(EC.element_to_be_clickable((By.CLASS_NAME,
+                                        "rc-button goog-inline-block rc-button-audio".replace(" ", "."))))\
+        .click()
 
-# Click on audio download button
-download_link = WebDriverWait(driver, 5)\
-    .until(EC.element_to_be_clickable((By.CLASS_NAME,
-                                      "rc-audiochallenge-tdownload-link".replace(" ", "."))))\
-# Retrieve audio and convert to .wav                                    
-ret = None
-tmp_dir = tempfile.gettempdir()
-mp3_file = os.path.join(tmp_dir, r"C:\Users\DANIEL\Desktop\ITSENSE\demo_captcha\webscrapping\tools\audio.mp3")
-wav_file = os.path.join(tmp_dir, r"C:\Users\DANIEL\Desktop\ITSENSE\demo_captcha\webscrapping\tools\audio.wav")
-tmp_files = [mp3_file, wav_file]
+    # Click on audio download button
+    download_link = WebDriverWait(driver, 5)\
+        .until(EC.element_to_be_clickable((By.CLASS_NAME,
+                                        "rc-audiochallenge-tdownload-link".replace(" ", "."))))\
+    # Retrieve audio and convert to .wav                                    
+    ret = None
+    tmp_dir = tempfile.gettempdir()
+    mp3_file = os.path.join(tmp_dir, "D:\ITSENSE_D\COFACE\webscrapping\\tools\\audio.mp3")
+    wav_file = os.path.join(tmp_dir, "D:\ITSENSE_D\COFACE\webscrapping\\tools\\audio.wav")
+    tmp_files = [mp3_file, wav_file]
 
-with open(mp3_file, "wb") as f:
-    link = download_link.get_attribute("href")
-    print(link)
-    r = requests.get(link, allow_redirects=True)
-    f.write(r.content)
-    f.close()
+    with open(mp3_file, "wb") as f:
+        link = download_link.get_attribute("href")
+        print(link)
+        r = requests.get(link, allow_redirects=True)
+        f.write(r.content)
+        f.close()
 
-AudioSegment.from_mp3(mp3_file).export(wav_file, format="wav")
+    AudioSegment.from_mp3(mp3_file).export(wav_file, format="wav")
 
-# Speech to text functionality
-recognizer = sr.Recognizer()
+    # Speech to text functionality
+    recognizer = sr.Recognizer()
 
-with sr.AudioFile(wav_file) as source:
-    recorded_audio = recognizer.listen(source)
-    text = recognizer.recognize_google(recorded_audio)
+    with sr.AudioFile(wav_file) as source:
+        recorded_audio = recognizer.listen(source)
+        text = recognizer.recognize_google(recorded_audio)
 
-# Input text in field
-WebDriverWait(driver, 5)\
-    .until(EC.element_to_be_clickable((By.ID,
-                                      "audio-response")))\
-    .send_keys(text)
+    # Input text in field
+    WebDriverWait(driver, 5)\
+        .until(EC.element_to_be_clickable((By.ID,
+                                        "audio-response")))\
+        .send_keys(text)
 
-# Click the "Verify" button to complete
-WebDriverWait(driver, 5)\
-    .until(EC.element_to_be_clickable((By.ID,
-                                      "recaptcha-verify-button")))\
-    .click()
+    # Click the "Verify" button to complete
+    WebDriverWait(driver, 5)\
+        .until(EC.element_to_be_clickable((By.ID,
+                                        "recaptcha-verify-button")))\
+        .click()
+    
+    # Go back to default content
+    driver.switch_to.default_content()
+except Exception as e:
+    print(str(e))
 
-# Go back to default content
-driver.switch_to.default_content()
 
 time.sleep(2)
 
-# Click on "Send button"
+# Click on "Search" button
 WebDriverWait(driver, 5)\
 .until(EC.element_to_be_clickable((By.ID,
                                     "j_idt17")))\
 .click()
+
+time.sleep(2)
+
+text = driver.find_element(By.XPATH, "//div[@id='form:j_idt8']").text
+print(text)
 
 time.sleep(10)
 
