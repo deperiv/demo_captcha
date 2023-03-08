@@ -75,8 +75,8 @@ download_link = WebDriverWait(driver, 5)\
 # Retrieve audio and convert to .wav                                    
 ret = None
 tmp_dir = tempfile.gettempdir()
-mp3_file = os.path.join(tmp_dir, r"C:\Users\DANIEL\Desktop\ITSENSE\demo_captcha\webscrapping\tools\audio.mp3")
-wav_file = os.path.join(tmp_dir, r"C:\Users\DANIEL\Desktop\ITSENSE\demo_captcha\webscrapping\tools\audio.wav")
+mp3_file = os.path.join(tmp_dir, "D:\ITSENSE_D\COFACE\webscrapping\\tools\\audio.mp3")
+wav_file = os.path.join(tmp_dir, "D:\ITSENSE_D\COFACE\webscrapping\\tools\\audio.wav")
 tmp_files = [mp3_file, wav_file]
 
 with open(mp3_file, "wb") as f:
