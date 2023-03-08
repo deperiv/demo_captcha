@@ -51,6 +51,11 @@ WebDriverWait(driver, 5)\
                                       "input[role='textbox']")))\
     .send_keys("71984381")
 
+# WebDriverWait(driver, 5)\
+#     .until(EC.element_to_be_clickable((By.CSS_SELECTOR,
+#                                       "input[role='textbox']")))\
+#     .send_keys("1026595200")
+
 # Find captcha iframe
 iframe = driver.find_element(By.TAG_NAME, "iframe") 
 if iframe.get_attribute("src").startswith("https://www.google.com/recaptcha/api2/anchor"):
@@ -75,10 +80,12 @@ WebDriverWait(driver, 5)\
 # Go back to default content
 driver.switch_to.default_content()
 
-time.sleep(5)
+time.sleep(20)
 
 # Select challenge iframe and switch to it
-try:
+iframe = driver.find_element(By.TAG_NAME, "iframe") 
+if iframe.get_attribute("src").startswith("https://www.google.com/recaptcha/api2/bframe"):
+    print("FOUND IFRAME - IMAGE CHALLENGE----------")
     challenge_iframe = driver.find_element(By.CSS_SELECTOR, "iframe[title='El reCAPTCHA caduca dentro de dos minutos']") 
     driver.switch_to.frame(challenge_iframe)
 
@@ -129,11 +136,7 @@ try:
     
     # Go back to default content
     driver.switch_to.default_content()
-except Exception as e:
-    print(str(e))
-
-
-time.sleep(2)
+    time.sleep(2)
 
 # Click on "Search" button
 WebDriverWait(driver, 5)\
@@ -141,7 +144,7 @@ WebDriverWait(driver, 5)\
                                     "j_idt17")))\
 .click()
 
-time.sleep(2)
+time.sleep(5)
 
 text = driver.find_element(By.XPATH, "//div[@id='form:j_idt8']").text
 print(text)
