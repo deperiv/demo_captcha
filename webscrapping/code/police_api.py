@@ -5,6 +5,7 @@ from selenium                       import webdriver
 from selenium.webdriver.support.ui  import WebDriverWait
 from selenium.webdriver.support     import expected_conditions as EC
 from selenium.webdriver.common.by   import By
+from selenium.common.exceptions     import TimeoutException
 
 import time
 
@@ -33,6 +34,13 @@ def home():
         ]
     }
     return message
+
+def is_elem_present(driver: webdriver, locator_type: str, locator: str, timeout: int):
+    try:
+        return WebDriverWait(driver, timeout).until(EC.element_to_be_clickable((locator_type, locator)))
+    except TimeoutException:
+        return False
+
 
 @app.post('/search',)
 def search(query:dict):
@@ -96,7 +104,11 @@ def search(query:dict):
     challenge_iframe = driver.find_element(By.CSS_SELECTOR, "iframe[title='El reCAPTCHA caduca dentro de dos minutos']") 
     driver.switch_to.frame(challenge_iframe)
 
-    try:
+    # Check whether the captcha has a challenge or not
+    audio_button = is_elem_present(
+            driver, By.CLASS_NAME, "rc-button goog-inline-block rc-button-audio".replace(" ", "."), 5)
+
+    if audio_button:
         # Click on audio button
         WebDriverWait(driver, 5)\
             .until(EC.element_to_be_clickable((By.CLASS_NAME,
@@ -106,6 +118,7 @@ def search(query:dict):
         print("----------FOUND IFRAME - IMAGE CHALLENGE----------")
 
         recognition_res = 1
+        count = 0
         while recognition_res:
             try:
                 # Click on audio download button
@@ -136,8 +149,14 @@ def search(query:dict):
                     text = recognizer.recognize_google(recorded_audio, language="es-CO")
                     
                 recognition_res = 0
-
+            
+            # The audio is probably pure noise
             except Exception as e:
+                count += 1
+                if count > 5:
+                    text = False
+                    recognition_res = 0
+                                    
                 print("Error: " + str(e))
 
                 # Click on "load new audio" button
@@ -145,23 +164,30 @@ def search(query:dict):
                     .until(EC.element_to_be_clickable((By.CLASS_NAME,
                                                     "rc-button goog-inline-block rc-button-reload".replace(" ", "."))))\
                     .click()
-                
-                time.sleep(2)
-                
-        # Input text in field
-        WebDriverWait(driver, 5)\
-            .until(EC.element_to_be_clickable((By.ID,
-                                            "audio-response")))\
-            .send_keys(text)
+                time.sleep(1)
+        
+        # No transcription was achieved
+        if not text:
+            message = {
+                "status": 500,
+                "ID": id,
+                "message": "Audio recognition error"
+            }
+            return message  
+        
+        else:
+            # Input text in field
+            WebDriverWait(driver, 5)\
+                .until(EC.element_to_be_clickable((By.ID,
+                                                "audio-response")))\
+                .send_keys(text)
 
-        # Click the "Verify" button to complete
-        WebDriverWait(driver, 5)\
-            .until(EC.element_to_be_clickable((By.ID,
-                                            "recaptcha-verify-button")))\
-            .click()
-    except:
-        pass
-    
+            # Click the "Verify" button to complete
+            WebDriverWait(driver, 5)\
+                .until(EC.element_to_be_clickable((By.ID,
+                                                "recaptcha-verify-button")))\
+                .click()
+        
     # Go back to default content
     driver.switch_to.default_content()
     time.sleep(1)
@@ -180,7 +206,7 @@ def search(query:dict):
     driver.quit()
 
     message = {
-        "status": 500,
+        "status": 200,
         "ID": id,
         "message": text
     }
