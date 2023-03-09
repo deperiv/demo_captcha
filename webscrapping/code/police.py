@@ -11,9 +11,21 @@ import tempfile
 import requests
 import os
 
+import numpy as np
+
+USER_AGENT_LIST = ['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Safari/605.1.15',
+                    'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0',
+                    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36',
+                    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:77.0) Gecko/20100101 Firefox/77.0',
+                    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36',
+                    ]
+
+userAgent_id = np.random.randint(0,5)
+
 options = webdriver.ChromeOptions()
 options.add_argument("--start-maximized")
 options.add_argument("--disable-extensions")
+options.add_argument(f'user-agent={USER_AGENT_LIST[userAgent_id]}')
 
 # CEDULA = "1026595200"
 # CEDULA = "71984381"
@@ -45,7 +57,7 @@ time.sleep(3)
 WebDriverWait(driver, 5)\
     .until(EC.element_to_be_clickable((By.CSS_SELECTOR,
                                     "input[role='textbox']")))\
-    .send_keys(id)
+    .send_keys(CEDULA)
 
 # Find captcha iframe
 iframe = driver.find_element(By.TAG_NAME, "iframe") 
