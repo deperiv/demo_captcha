@@ -74,6 +74,8 @@ def search(query:dict):
         .until(EC.element_to_be_clickable((By.CSS_SELECTOR,
                                         "input[value='true']")))\
         .click()
+    
+    delay()
 
     # Click on "Send" button
     WebDriverWait(driver, 5)\
@@ -107,11 +109,11 @@ def search(query:dict):
         .until(EC.element_to_be_clickable((By.CLASS_NAME,
                                         "recaptcha-checkbox-border")))\
         .click()
+    
+    delay()
 
     # Go back to default content
     driver.switch_to.default_content()
-
-    delay()
 
     # Select challenge iframe and switch to it
     iframes = driver.find_elements(By.TAG_NAME, "iframe") 
@@ -132,6 +134,8 @@ def search(query:dict):
             .click()
         
         print("----------FOUND IFRAME - IMAGE CHALLENGE----------")
+
+        delay()
 
         recognition_res = 1
         count = 0
@@ -181,7 +185,9 @@ def search(query:dict):
                         .until(EC.element_to_be_clickable((By.CLASS_NAME,
                                                         "rc-button goog-inline-block rc-button-reload".replace(" ", "."))))\
                         .click()
-                    time.sleep(1)
+                    
+                    delay()
+
                 except:
                     message = {
                         "status": 500,
@@ -205,6 +211,8 @@ def search(query:dict):
                 .until(EC.element_to_be_clickable((By.ID,
                                                 "audio-response")))\
                 .send_keys(text)
+            
+            delay()
 
             # Click the "Verify" button to complete
             WebDriverWait(driver, 5)\
