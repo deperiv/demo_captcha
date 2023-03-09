@@ -13,6 +13,8 @@ import os
 
 import numpy as np
 
+PROXY = "190.61.88.147:8080"
+
 USER_AGENT_LIST = ['Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Safari/605.1.15',
                     'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0',
                     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36',
@@ -26,12 +28,15 @@ options = webdriver.ChromeOptions()
 options.add_argument("--start-maximized")
 options.add_argument("--disable-extensions")
 options.add_argument(f'user-agent={USER_AGENT_LIST[userAgent_id]}')
+options.add_argument('--proxy-server=%s' % PROXY)
 
 # CEDULA = "1026595200"
 # CEDULA = "71984381"
 CEDULA = "10773983"
 
-DRIVER_PATH = "D:\\ITSENSE_D\\COFACE\\webscrapping\\tools\\chromedriver.exe"
+PATH = "D:\\ITSENSE_D\\COFACE\\webscrapping\\tools\\"
+
+DRIVER_PATH = PATH+"chromedriver.exe"
 
 driver = webdriver.Chrome(DRIVER_PATH, options=options)
 
@@ -111,8 +116,8 @@ try:
             # Retrieve audio and convert to .wav                                    
             ret = None
             tmp_dir = tempfile.gettempdir()
-            mp3_file = os.path.join(tmp_dir, "D:\ITSENSE_D\COFACE\webscrapping\\tools\\audio.mp3")
-            wav_file = os.path.join(tmp_dir, "D:\ITSENSE_D\COFACE\webscrapping\\tools\\audio.wav")
+            mp3_file = os.path.join(tmp_dir, PATH+"audio.mp3")
+            wav_file = os.path.join(tmp_dir, PATH+"audio.wav")
             tmp_files = [mp3_file, wav_file]
 
             with open(mp3_file, "wb") as f:

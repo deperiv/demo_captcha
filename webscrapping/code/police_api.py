@@ -28,7 +28,9 @@ app = FastAPI(title="Police - Web crawler",
               description="API that retrieves data from Police website",
               version="0.1.0")
 
-DRIVER_PATH = "D:\\ITSENSE_D\\COFACE\\webscrapping\\tools\\chromedriver.exe"
+PATH = "D:\\ITSENSE_D\\COFACE\\webscrapping\\tools\\"
+
+DRIVER_PATH = PATH+"chromedriver.exe"
 
 @app.get("/", tags=["home"])
 def home():
@@ -53,10 +55,13 @@ def search(query:dict):
 
     userAgent_id = np.random.randint(0,5)
 
+    PROXY = "190.61.88.147:8080"
+
     options = webdriver.ChromeOptions()
     options.add_argument("--start-maximized")
     options.add_argument("--disable-extensions")
     options.add_argument(f'user-agent={USER_AGENT_LIST[userAgent_id]}')
+    options.add_argument('--proxy-server=%s' % PROXY)
 
     driver = webdriver.Chrome(DRIVER_PATH, options=options)
 
@@ -141,8 +146,8 @@ def search(query:dict):
                 # Retrieve audio and convert to .wav                                    
                 ret = None
                 tmp_dir = tempfile.gettempdir()
-                mp3_file = os.path.join(tmp_dir, "D:\ITSENSE_D\COFACE\webscrapping\\tools\\audio.mp3")
-                wav_file = os.path.join(tmp_dir, "D:\ITSENSE_D\COFACE\webscrapping\\tools\\audio.wav")
+                mp3_file = os.path.join(tmp_dir, PATH+"audio.mp3")
+                wav_file = os.path.join(tmp_dir, PATH+"audio.wav")
                 tmp_files = [mp3_file, wav_file]
 
                 with open(mp3_file, "wb") as f:
