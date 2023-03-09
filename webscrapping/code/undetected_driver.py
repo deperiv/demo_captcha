@@ -31,10 +31,10 @@ PATH = "D:\\ITSENSE_D\\COFACE\\webscrapping\\tools\\"
 DRIVER_PATH = PATH+"chromedriver.exe"
 
 if __name__ == '__main__':
-    email = "#"
-    password = "#"
 
     options = webdriver.ChromeOptions()
+    #options.add_argument('proxy-server=106.122.8.54:3128')
+    options.add_argument(r'--user-data-dir=C:\Users\Usuario\AppData\Local\Google\Chrome\User Data\Default')
 
     driver = uc.Chrome(
         options=options,

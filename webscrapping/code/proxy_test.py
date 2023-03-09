@@ -36,8 +36,8 @@ DRIVER_PATH = "D:\\ITSENSE_D\\COFACE\\webscrapping\\tools\\chromedriver.exe"
 driver = webdriver.Chrome(DRIVER_PATH, options=options, desired_capabilities=capabilities)
 
 # Start browser
-# driver.get("https://www.whatismyip.com/")
-driver.get("https://antecedentes.policia.gov.co:7005/WebJudicial/index.xhtml")
+driver.get("https://www.whatismyip.com/")
+# driver.get("https://antecedentes.policia.gov.co:7005/WebJudicial/index.xhtml")
 # driver.get("https://www.google.com/?hl=es")
 
 
