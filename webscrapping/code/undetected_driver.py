@@ -49,6 +49,8 @@ if __name__ == '__main__':
         .until(EC.element_to_be_clickable((By.CSS_SELECTOR,
                                         "input[value='true']")))\
         .click()
+    
+    delay()
 
     # Click on "Send" button
     WebDriverWait(driver, 5)\
@@ -106,6 +108,8 @@ if __name__ == '__main__':
                                             "rc-button goog-inline-block rc-button-audio".replace(" ", "."))))\
             .click()
         
+        delay()
+        
         print("----------FOUND IFRAME - IMAGE CHALLENGE----------")
 
         recognition_res = 1
@@ -156,7 +160,7 @@ if __name__ == '__main__':
                         .until(EC.element_to_be_clickable((By.CLASS_NAME,
                                                         "rc-button goog-inline-block rc-button-reload".replace(" ", "."))))\
                         .click()
-                    time.sleep(1)
+                    delay()
                 except:
                     print("IP has been blacklisted")
         
@@ -169,6 +173,8 @@ if __name__ == '__main__':
                 .until(EC.element_to_be_clickable((By.ID,
                                                 "audio-response")))\
                 .send_keys(text)
+            
+            delay()
 
             # Click the "Verify" button to complete
             WebDriverWait(driver, 5)\

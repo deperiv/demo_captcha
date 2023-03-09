@@ -11,6 +11,7 @@ import time
 
 from pydub import AudioSegment
 import speech_recognition as sr
+import undetected_chromedriver as uc
 import tempfile
 import requests
 import os
@@ -61,8 +62,13 @@ def search(query:dict):
     options.add_argument("--start-maximized")
     options.add_argument("--disable-extensions")
     options.add_argument(f'user-agent={USER_AGENT_LIST[userAgent_id]}')
+    options.add_argument(r'--user-data-dir=C:\Users\Usuario\AppData\Local\Google\Chrome\User Data\Default')
 
-    driver = webdriver.Chrome(DRIVER_PATH, options=options)
+    # driver = webdriver.Chrome(DRIVER_PATH, options=options)
+
+    driver = uc.Chrome(
+        options=options,
+    )
 
     # Start browser
     driver.get("https://antecedentes.policia.gov.co:7005/WebJudicial/index.xhtml")
