@@ -31,21 +31,21 @@ time.sleep(3)
 # Check "Accept terms and conditions" radio button
 WebDriverWait(driver, 5)\
     .until(EC.element_to_be_clickable((By.CSS_SELECTOR,
-                                      "input[value='true']")))\
+                                    "input[value='true']")))\
     .click()
 
 # Click on "Send" button
 WebDriverWait(driver, 5)\
     .until(EC.element_to_be_clickable((By.CSS_SELECTOR,
-                                      "button[role='button']")))\
+                                    "button[role='button']")))\
     .click()
 
 time.sleep(3)
 
 WebDriverWait(driver, 5)\
     .until(EC.element_to_be_clickable((By.CSS_SELECTOR,
-                                      "input[role='textbox']")))\
-    .send_keys(CEDULA)
+                                    "input[role='textbox']")))\
+    .send_keys(id)
 
 # Find captcha iframe
 iframe = driver.find_element(By.TAG_NAME, "iframe") 
@@ -64,7 +64,7 @@ driver.switch_to.frame(iframe)
 # Click on "Not a robot" checkbox
 WebDriverWait(driver, 5)\
     .until(EC.element_to_be_clickable((By.CLASS_NAME,
-                                      "recaptcha-checkbox-border")))\
+                                    "recaptcha-checkbox-border")))\
     .click()
 
 # Go back to default content
@@ -76,16 +76,17 @@ time.sleep(1)
 iframes = driver.find_elements(By.TAG_NAME, "iframe") 
 print([iframe.get_attribute("src") for iframe in iframes])
 
-if not iframes[-1].get_attribute("src").startswith("https://www.google.com/recaptcha/api2/anchor"):
-    print("----------FOUND IFRAME - IMAGE CHALLENGE----------")
-    challenge_iframe = driver.find_element(By.CSS_SELECTOR, "iframe[title='El reCAPTCHA caduca dentro de dos minutos']") 
-    driver.switch_to.frame(challenge_iframe)
+challenge_iframe = driver.find_element(By.CSS_SELECTOR, "iframe[title='El reCAPTCHA caduca dentro de dos minutos']") 
+driver.switch_to.frame(challenge_iframe)
 
+try:
     # Click on audio button
     WebDriverWait(driver, 5)\
         .until(EC.element_to_be_clickable((By.CLASS_NAME,
                                         "rc-button goog-inline-block rc-button-audio".replace(" ", "."))))\
         .click()
+    
+    print("----------FOUND IFRAME - IMAGE CHALLENGE----------")
 
     recognition_res = 1
     while recognition_res:
@@ -141,10 +142,12 @@ if not iframes[-1].get_attribute("src").startswith("https://www.google.com/recap
         .until(EC.element_to_be_clickable((By.ID,
                                         "recaptcha-verify-button")))\
         .click()
-    
-    # Go back to default content
-    driver.switch_to.default_content()
-    time.sleep(2)
+except:
+    pass
+
+# Go back to default content
+driver.switch_to.default_content()
+time.sleep(1)
 
 # Click on "Search" button
 WebDriverWait(driver, 5)\
