@@ -40,10 +40,13 @@ DRIVER_PATH = PATH+"chromedriver.exe"
 
 driver = webdriver.Chrome(DRIVER_PATH, options=options)
 
+def delay():
+    time.sleep(np.random.randint(3,5))    
+
 # Start browser
 driver.get("https://antecedentes.policia.gov.co:7005/WebJudicial/index.xhtml")
 
-time.sleep(3)
+
 
 # Check "Accept terms and conditions" radio button
 WebDriverWait(driver, 5)\
@@ -57,7 +60,7 @@ WebDriverWait(driver, 5)\
                                     "button[role='button']")))\
     .click()
 
-time.sleep(3)
+delay()
 
 WebDriverWait(driver, 5)\
     .until(EC.element_to_be_clickable((By.CSS_SELECTOR,
@@ -87,7 +90,7 @@ WebDriverWait(driver, 5)\
 # Go back to default content
 driver.switch_to.default_content()
 
-time.sleep(1)
+delay()
 
 # Select challenge iframe and switch to it
 iframes = driver.find_elements(By.TAG_NAME, "iframe") 
@@ -146,7 +149,7 @@ try:
                                                 "rc-button goog-inline-block rc-button-reload".replace(" ", "."))))\
                 .click()
             
-            time.sleep(2)
+            delay()
             
     # Input text in field
     WebDriverWait(driver, 5)\
@@ -164,7 +167,7 @@ except:
 
 # Go back to default content
 driver.switch_to.default_content()
-time.sleep(1)
+delay()
 
 # Click on "Search" button
 WebDriverWait(driver, 5)\
@@ -172,7 +175,7 @@ WebDriverWait(driver, 5)\
                                     "j_idt17")))\
 .click()
 
-time.sleep(2)
+delay()
 
 text = driver.find_element(By.XPATH, "//div[@id='form:j_idt8']").text
 print(text)

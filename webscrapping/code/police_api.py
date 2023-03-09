@@ -48,6 +48,8 @@ def is_elem_present(driver: webdriver, locator_type: str, locator: str, timeout:
     except TimeoutException:
         return False
 
+def delay():
+    time.sleep(np.random.randint(2,5))    
 
 @app.post('/search',)
 def search(query:dict):
@@ -55,20 +57,17 @@ def search(query:dict):
 
     userAgent_id = np.random.randint(0,5)
 
-    PROXY = "190.61.88.147:8080"
-
     options = webdriver.ChromeOptions()
     options.add_argument("--start-maximized")
     options.add_argument("--disable-extensions")
     options.add_argument(f'user-agent={USER_AGENT_LIST[userAgent_id]}')
-    options.add_argument('--proxy-server=%s' % PROXY)
 
     driver = webdriver.Chrome(DRIVER_PATH, options=options)
 
     # Start browser
     driver.get("https://antecedentes.policia.gov.co:7005/WebJudicial/index.xhtml")
 
-    time.sleep(3)
+    delay()
 
     # Check "Accept terms and conditions" radio button
     WebDriverWait(driver, 5)\
@@ -82,7 +81,7 @@ def search(query:dict):
                                         "button[role='button']")))\
         .click()
 
-    time.sleep(3)
+    delay()
 
     WebDriverWait(driver, 5)\
         .until(EC.element_to_be_clickable((By.CSS_SELECTOR,
@@ -112,7 +111,7 @@ def search(query:dict):
     # Go back to default content
     driver.switch_to.default_content()
 
-    time.sleep(1)
+    delay()
 
     # Select challenge iframe and switch to it
     iframes = driver.find_elements(By.TAG_NAME, "iframe") 
@@ -215,7 +214,7 @@ def search(query:dict):
         
     # Go back to default content
     driver.switch_to.default_content()
-    time.sleep(1)
+    delay()
 
     # Click on "Search" button
     WebDriverWait(driver, 5)\
@@ -223,7 +222,7 @@ def search(query:dict):
                                         "j_idt17")))\
     .click()
 
-    time.sleep(2)
+    delay()
 
     text = driver.find_element(By.XPATH, "//div[@id='form:j_idt8']").text
     print(text)
