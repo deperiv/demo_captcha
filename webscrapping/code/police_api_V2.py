@@ -52,6 +52,63 @@ def home():
     }
     return message
 
+@app.get("/ip",)
+def home():
+    options = webdriver.ChromeOptions()
+    options.add_argument("--start-maximized")
+    options.add_extension(EXT_PATH)
+    # options.add_argument(f'user-agent={USER_AGENT_LIST[userAgent_id]}')
+    # options.add_argument(r'--user-data-dir=C:\Users\Usuario\AppData\Local\Google\Chrome\User Data\Default')
+
+    driver = webdriver.Chrome(DRIVER_PATH, options=options)
+
+    try: 
+        # Start browser 
+        driver.get(EXTENSION_LINK)
+        delay()
+        #obtain parent window handle
+        parent = driver.window_handles[0]
+        #obtain browser tab window
+        chld = driver.window_handles[1]
+        #switch to browser tab
+        driver.switch_to.window(chld)
+        #close browser tab window
+        driver.close()
+        #switch to parent window
+        driver.switch_to.window(parent)
+
+        delay()
+
+        # Change IP through VPN
+        WebDriverWait(driver, 5)\
+            .until(EC.element_to_be_clickable((By.ID,
+                                            "ConnectionButton")))\
+            .click()
+
+        delay()
+
+        # Go to IP website
+        driver.get(IP_LINK)
+
+        delay()
+
+        text = driver.find_element(By.ID, "ip-info").text
+
+        driver.quit()
+
+        message = {
+            "status": 200,
+            "message": text
+        }
+        return message
+
+    except:
+        message = {
+            "status": 500,
+            "message": "Connection error"
+        }
+        return message
+
 @app.post('/search',)
 def search(query:dict):
     id = str(query["id"])
@@ -118,6 +175,8 @@ def search(query:dict):
             .send_keys(id)
         
         delay()
+
+        
     except:
         message = {
             "status": 500,
