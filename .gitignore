@@ -49,6 +49,7 @@ Thumbs.db
 *.wmv
 
 #
+__pycache__/
 webscrapping/code/__pycache__/
 *.py[cod]
 *$py.class

@@ -151,7 +151,6 @@ def search(query:dict):
 
     # Select challenge iframe and switch to it
     iframes = driver.find_elements(By.TAG_NAME, "iframe") 
-    print([iframe.get_attribute("src") for iframe in iframes])
 
     challenge_iframe = driver.find_element(By.CSS_SELECTOR, "iframe[title='El reCAPTCHA caduca dentro de dos minutos']") 
     driver.switch_to.frame(challenge_iframe)
@@ -267,7 +266,6 @@ def search(query:dict):
     delay()
 
     text = driver.find_element(By.XPATH, "//div[@id='form:j_idt8']").text
-    print(text)
 
     driver.quit()
 
